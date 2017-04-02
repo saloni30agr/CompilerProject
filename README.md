@@ -1,4 +1,4 @@
-yacc-tutorial
+Basic Compiler Construction
 =============
 
-This is the source code for my Yacc/Bison screencast tutorial on YouTube. 
+This is the source code for our basic compiler as our major project.
