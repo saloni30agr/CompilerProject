@@ -10,13 +10,14 @@ void updateSymbolVal(char symbol, int val);
 extern int yylex();
 %}
 
-%union {int num; char id;}         /* Yacc definitions */
+%union {int num; char id; double ud;}         /* Yacc definitions */
 %start line
 %token print
 %token exit_command
 %token <num> number
 %token <id> identifier
-%type <num> line exp exp1 term 
+%token <ud> userdouble
+%type <ud> line exp exp1 term 
 %type <id> assignment
 
 %%
@@ -25,9 +26,9 @@ extern int yylex();
 
 line    : assignment ';'		{;}
 		| exit_command ';'		{exit(EXIT_SUCCESS);}
-		| print exp ';'			{printf("Printing %d\n", $2);}
+		| print exp ';'			{printf("Printing %f\n", $2);}
 		| line assignment ';'	{;}
-		| line print exp ';'	{printf("Printing %d\n", $3);}
+		| line print exp ';'	{printf("Printing %f\n", $3);}
 		| line exit_command ';'	{exit(EXIT_SUCCESS);}
         ;
 
@@ -39,11 +40,12 @@ exp    	: exp '+' exp1          {$$ = $1 + $3;}
        	;
 exp1	: exp1 '*' term			{$$ = $1 * $3;}
        	| exp1 '/' term			{$$ = $1 / $3;}
-       	| exp1 '%' term			{$$ = $1 % $3;}
+       	| exp1 '%' term			{$$ = (int)$1 % (int)$3;}
        	| term                  {$$ = $1;}
        	;			
 term   	: number                {$$ = $1;}
 		| identifier			{$$ = symbolVal($1);} 
+		| userdouble			{$$=$1;}
         ;
 
 %%                     /* C code */
